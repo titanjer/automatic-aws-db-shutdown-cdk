@@ -18,10 +18,10 @@ export class LambdaStack extends Stack {
         super(scope, id, props);
 
         this.shutDownLambdaCode = Code.fromCfnParameters();
-        this.buildEventTriggeredLambdaFunction("DBShutDown", props.instanceId, props.instanceARN, "rds:StopDBInstance", "0 17 ? * MON-FRI *", this.shutDownLambdaCode);
+        this.buildEventTriggeredLambdaFunction("DBShutDown", props.instanceId, props.instanceARN, "rds:StopDBInstance", "30 7 ? * MON-FRI *", this.shutDownLambdaCode);
 
         this.startUpLambdaCode = Code.fromCfnParameters();
-        this.buildEventTriggeredLambdaFunction("DBStartUp", props.instanceId, props.instanceARN, "rds:StartDBInstance", "0 5 ? * MON-FRI *", this.startUpLambdaCode);
+        this.buildEventTriggeredLambdaFunction("DBStartUp", props.instanceId, props.instanceARN, "rds:StartDBInstance", "0 7 ? * MON-FRI *", this.startUpLambdaCode);
     }
 
     private buildEventTriggeredLambdaFunction(name: string, instanceId: string, instanceARN: string, instanceAction: string, scheduleExpression: string, lambdaCode: CfnParametersCode): Function {
