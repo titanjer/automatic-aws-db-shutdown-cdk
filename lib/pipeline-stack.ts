@@ -18,16 +18,18 @@ export class PipelineStack extends Stack {
     constructor(scope: Construct, id: string, props: PipelineStackProps) {
         super(scope, id, props);
 
-        // Source action
         const oauthToken = SecretValue.secretsManager('/automatic-aws-db-shutdown-cdk/github/token', {jsonField: 'github-token'});
-        const githubRepo = StringParameter.valueFromLookup(this, "/automatic-aws-db-shutdown-cdk/github/repo");
-        const githubOwner = StringParameter.valueFromLookup(this, "/automatic-aws-db-shutdown-cdk/github/owner");
+        // const githubRepo = StringParameter.valueFromLookup(this, "/automatic-aws-db-shutdown-cdk/github/repo");
+        // const githubOwner = StringParameter.valueFromLookup(this, "/automatic-aws-db-shutdown-cdk/github/owner");
+        const githubRepo = StringParameter.fromStringParameterName(this, "githubRepo", "/automatic-aws-db-shutdown-cdk/github/repo");
+        const githubOwner = StringParameter.fromStringParameterName(this, "githubOwner", "/automatic-aws-db-shutdown-cdk/github/owner");
 
+        // Source action
         const sourceOutput = new Artifact("SourceOutput");
         const sourceAction = new GitHubSourceAction({
             actionName: 'Source',
-            owner: githubOwner,
-            repo: githubRepo,
+            owner: githubOwner.stringValue,
+            repo: githubRepo.stringValue,
             branch: 'master',
             oauthToken: oauthToken,
             output: sourceOutput
@@ -44,6 +46,9 @@ export class PipelineStack extends Stack {
             input: sourceOutput,
             outputs: [cdkBuildOutput],
         });
+
+        githubRepo.grantRead(cdkBuild);
+        githubOwner.grantRead(cdkBuild);
 
         const shutDownLambdaBuild = this.createLambdaBuildProject('ShutDownLambdaBuild', 'lambda/shut-down');
         const shutDownLambdaBuildOutput = new Artifact('ShutDownLambdaBuildOutput');
