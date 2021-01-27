@@ -2,6 +2,8 @@
 
 This repository was created together with [this blog post](https://medium.com/hatchsoftware/using-the-aws-cdk-to-build-scheduled-lambda-functions-13eb1674586e).
 
+Forked from [HatchSoftware/automatic-aws-db-shutdown-cdk](https://github.com/HatchSoftware/automatic-aws-db-shutdown-cdk)
+
 ## Prerequisites
 - Install Node.js (https://nodejs.org/en/download/)
 - Install AWS CLI (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
